@@ -20,10 +20,24 @@ namespace StudendsGradeApp.Controllers
         }
 
         // GET: Students
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string searchString, string remarkFilter)
         {
-            return View(await _context.Students.ToListAsync());
+            var students = from s in _context.Students
+                           select s;
+
+            if (!string.IsNullOrEmpty(searchString))
+            {
+                students = students.Where(s => s.Name.Contains(searchString));
+            }
+            if (!string.IsNullOrEmpty(remarkFilter))
+            {
+                students = students.Where(s => s.Remarks == remarkFilter);
+            }
+            return View(await students.ToListAsync());
         }
+
+
+
 
         // GET: Students/Details/5
         public async Task<IActionResult> Details(int? id)
