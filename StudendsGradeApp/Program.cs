@@ -9,7 +9,7 @@ string dbPath;
 if (builder.Environment.IsDevelopment())
 {
     // Local development path
-    dbPath = @"C:\Users\navee\source\repos\StudendsGradeApp\StudendsGradeApp\StudentDB.db";
+    dbPath = Path.Combine("StudentDB.db"); // Relative to the current directory
 }
 else
 {
