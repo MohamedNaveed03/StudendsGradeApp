@@ -1,6 +1,5 @@
 using Microsoft.EntityFrameworkCore;
 using StudendsGradeApp.Data;
-using StudentsGradeApp.Data; // Ensure this is the correct namespace
 using System.IO;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -16,7 +15,7 @@ if (builder.Environment.IsDevelopment())
 else
 {
     // Use a relative path for production (e.g., Azure)
-    dbPath = Path.Combine(Environment.CurrentDirectory, "StudentDB.db");
+    dbPath = Path.Combine("StudentDB.db");
 }
 
 // Update the connection string to use the correct database path
@@ -30,12 +29,12 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 
 var app = builder.Build();
 
-// Automatically apply migrations at startup
-using (var scope = app.Services.CreateScope())
-{
-    var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-    dbContext.Database.Migrate(); // This ensures migrations are applied
-}
+//// Automatically apply migrations at startup
+//using (var scope = app.Services.CreateScope())
+//{
+//    var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+//    dbContext.Database.Migrate(); // This ensures migrations are applied
+//}
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
