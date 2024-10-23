@@ -29,12 +29,12 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 
 var app = builder.Build();
 
-//// Automatically apply migrations at startup
-//using (var scope = app.Services.CreateScope())
-//{
-//    var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-//    dbContext.Database.Migrate(); // This ensures migrations are applied
-//}
+// Automatically apply migrations at startup
+using (var scope = app.Services.CreateScope())
+{
+    var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+    dbContext.Database.Migrate(); // This ensures migrations are applied
+}
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
