@@ -1,25 +1,25 @@
 using Microsoft.EntityFrameworkCore;
 using StudendsGradeApp.Data;
+using StudentsGradeApp.Data; // Ensure this is the correct namespace
 using System.IO;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Set the database path based on the environment
 string dbPath;
+
 if (builder.Environment.IsDevelopment())
 {
-    // Local development path
+    // Use a relative path for local development
     dbPath = Path.Combine("StudentDB.db"); // Relative to the current directory
 }
 else
 {
-    // Azure or production path
+    // Use a relative path for production (e.g., Azure)
     dbPath = Path.Combine(Environment.CurrentDirectory, "StudentDB.db");
 }
 
 // Update the connection string to use the correct database path
-builder.Configuration.SetBasePath(Directory.GetCurrentDirectory());
-builder.Configuration.AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
 builder.Configuration["ConnectionStrings:localDb"] = $"Data Source={dbPath}";
 
 // Add services to the container.
@@ -29,6 +29,13 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("localDb")));
 
 var app = builder.Build();
+
+// Automatically apply migrations at startup
+using (var scope = app.Services.CreateScope())
+{
+    var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+    dbContext.Database.Migrate(); // This ensures migrations are applied
+}
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
